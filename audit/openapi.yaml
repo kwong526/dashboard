@@ -1,0 +1,163 @@
+---
+openapi: 3.0.0
+info:
+  title: Audit API
+  description: This API is for AUDIT info
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: stocks
+    description: Operations available for stock information
+paths:
+  /buy:
+    get:
+      summary: get buy requests
+      operationId: app.get_buy_stock
+      description: Gets buy events givne a current date
+      parameters:
+        - name: index
+          in: query
+          description: Gets the buy index in the event store
+          schema:
+            type: integer
+            example: 0
+      responses:
+        "200":
+          description: Successfully returned a buy event
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/BuyEvent"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /priceCheck:
+    get:
+      tags:
+        - devices
+      summary: get stock price requests
+      operationId: app.get_stock_price
+      description: Gets stock price events given a current date
+      parameters:
+        - name: index
+          in: query
+          description: Gets the index for the search event
+          schema:
+            type: integer
+            example: 0
+      responses:
+        "200":
+          description: Successfully returned a price events
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/PriceEvent"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    BuyEvent:
+      required:
+        - buyDate
+        - buyPrice
+        - purchaseID
+        - sellVolume
+        - stockTicker
+        - traceId
+      type: object
+      properties:
+        stockTicker:
+          type: string
+          example: AMZN
+        purchaseID:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        traceId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        sellVolume:
+          minimum: 0
+          type: integer
+          format: int32
+          example: 5
+        buyPrice:
+          type: number
+          format: float
+          example: 12.11
+        buyDate:
+          format: date-time
+          example: 2022-09-08T10:09:22.001Z
+    PriceEvent:
+      required:
+        - dateStartMonth
+        - dateStartDay
+        - dateSort
+        - stockTicker
+        - timespanLen
+        - timespanUnit
+        - traceId
+      type: object
+      properties:
+        stockTicker:
+          type: string
+          example: AMZN
+        timespanUnit:
+          type: string
+          example: day/week/month
+        timespanLen:
+          type: integer
+          format: int32
+          example: 30
+        dateStartMonth:
+          type: integer
+          format: int32
+          example: 07
+        dateStartDay:
+          type: integer
+          format: int32
+          example: 21
+        dateSort:
+          type: string
+          example: asc/desc
+        traceId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000

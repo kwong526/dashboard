@@ -1,0 +1,7 @@
+version: 1
+events:
+  hostname: acit3855-kafkalab.westus3.cloudapp.azure.com
+  port: 9092
+  topic: kafka
+log:
+  max_retry: 50000

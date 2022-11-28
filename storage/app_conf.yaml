@@ -1,0 +1,13 @@
+version: 1
+datastore:
+  user: clinton
+  password: clintonwong!
+  hostname: acit3855-kafkalab.westus3.cloudapp.azure.com
+  port: 3306
+  db: kafka
+events:
+  hostname: acit3855-kafkalab.westus3.cloudapp.azure.com
+  port: 9092
+  topic: kafka
+log:
+  max_retry: 50000

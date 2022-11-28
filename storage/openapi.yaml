@@ -1,0 +1,147 @@
+---
+openapi: 3.0.0
+info:
+  title: Stock Price
+  description: Buy stocks and get stock prices
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: stocks
+    description: 
+paths:
+  /buy:
+    get:
+      summary: gets the buy stock
+      operationId: app.get_buy_stock
+      description: gets the buy stock added after a timestamp
+      parameters:
+        - name: timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        "200":
+          description: Successfully returned a list of buy stock items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BuyEvent"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /priceCheck:
+    get:
+      tags:
+        - devices
+      summary: gets the new price check
+      operationId: app.get_price_check
+      description: gets the price check added after a timestamp
+      parameters:
+        - name: timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33Z
+      responses:
+        "200":
+          description: Successfully returned a list of search items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PriceEvent"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    BuyEvent:
+      required:
+        - buyDate
+        - buyPrice
+        - purchaseID
+        - sellVolume
+        - stockTicker
+        - traceId
+      type: object
+      properties:
+        stockTicker:
+          type: string
+          example: AMZN
+        purchaseID:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        traceId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        sellVolume:
+          minimum: 0
+          type: integer
+          format: int32
+          example: 5
+        buyPrice:
+          type: number
+          format: float
+          example: 12.11
+        buyDate:
+          format: date-time
+          example: 2022-09-08T10:09:22.001Z
+    PriceEvent:
+      required:
+        - dateStartMonth
+        - dateStartDay
+        - dateSort
+        - stockTicker
+        - timespanLen
+        - timespanUnit
+        - traceId
+      type: object
+      properties:
+        stockTicker:
+          type: string
+          example: AMZN
+        timespanUnit:
+          type: string
+          example: day/week/month
+        timespanLen:
+          type: integer
+          format: int32
+          example: 30
+        dateStartMonth:
+          type: integer
+          format: int32
+          example: 07
+        dateStartDay:
+          type: integer
+          format: int32
+          example: 21
+        dateSort:
+          type: string
+          example: asc/desc
+        traceId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000

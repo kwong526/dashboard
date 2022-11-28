@@ -1,0 +1,119 @@
+---
+openapi: 3.0.0
+info:
+  title: Stock Buy and Price
+  description: Lets you buy and price stocks
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: stocks
+    description: Operations available for stock information
+paths:
+  /buy:
+    post:
+      tags:
+        - users
+      summary: purchase the stock
+      description: purchase the stock
+      operationId: app.buyStock
+      requestBody:
+        description: purchased stock
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BuyEvent"
+      responses:
+        "200":
+          description: Your transaction is successful
+        "400":
+          description: invalid input, object invalid
+  /priceCheck:
+    post:
+      tags:
+        - stocks
+      summary: price a stock
+      description: price a stock
+      operationId: app.stockPrice
+      requestBody:
+        description: price a stock
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PriceEvent"
+      responses:
+        "200":
+          description: search results matching criteria
+        "400":
+          description: invalid input, object invalid
+components:
+  schemas:
+    BuyEvent:
+      required:
+        - buyDate
+        - buyPrice
+        - purchaseID
+        - sellVolume
+        - stockTicker
+        - traceId
+      type: object
+      properties:
+        stockTicker:
+          type: string
+          example: AMZN
+        purchaseID:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        traceId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        sellVolume:
+          minimum: 0
+          type: integer
+          format: int32
+          example: 5
+        buyPrice:
+          type: number
+          format: float
+          example: 12.11
+        buyDate:
+          format: date-time
+          example: 2022-09-08T10:09:22.001Z
+    PriceEvent:
+      required:
+        - dateStartMonth
+        - dateStartDay
+        - dateSort
+        - stockTicker
+        - timespanLen
+        - timespanUnit
+        - traceId
+      type: object
+      properties:
+        stockTicker:
+          type: string
+          example: AMZN
+        timespanUnit:
+          type: string
+          example: day/week/month
+        timespanLen:
+          type: integer
+          format: int32
+          example: 30
+        dateStartMonth:
+          type: integer
+          format: int32
+          example: 07
+        dateStartDay:
+          type: integer
+          format: int32
+          example: 21
+        dateSort:
+          type: string
+          example: asc/desc
+        traceId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
